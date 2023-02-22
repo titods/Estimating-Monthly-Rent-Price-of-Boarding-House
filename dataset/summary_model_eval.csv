@@ -1,0 +1,9 @@
+,,R^2,R^2 5-CV train and validate,RMSE,MAE
+LGBM_bayesian_opt,train,0.901,0.91 ± 0.003,278690.642,205158.311
+LGBM_bayesian_opt,test,0.808,0.736 ± 0.015,400814.739,288133.543
+LGBM_no_outliers_tuned,train,0.875,0.877 ± 0.004,313225.327,229755.225
+LGBM_no_outliers_tuned,test,0.808,0.737 ± 0.019,400564.657,288193.634
+stacking_meta_LinReg,train,0.888,0.893 ± 0.002,296050.562,214922.214
+stacking_meta_LinReg,test,0.814,0.74 ± 0.021,395154.953,284512.581
+voting_RF_LGBM,train,0.891,0.891 ± 0.003,292802.505,209011.642
+voting_RF_LGBM,test,0.809,0.738 ± 0.021,400162.746,287224.944
