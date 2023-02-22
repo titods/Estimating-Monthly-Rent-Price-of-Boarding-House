@@ -1,0 +1,12 @@
+pandas
+numpy
+matplotlib
+seaborn
+folium
+streamlit
+sklearn
+lightgbm
+streamlit_folium
+shap
+pickle
+PIL
