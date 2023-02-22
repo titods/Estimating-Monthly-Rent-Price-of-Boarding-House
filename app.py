@@ -133,7 +133,7 @@ def main():
     
     #### Navigation ####
     st.sidebar.title('Navigation')
-    selected_page = st.sidebar.selectbox('Select Page', ['Home Page', 'Overview', 'Data Visualization', 'Monthly Rent Price Estimator', 'Web Scrapping the Data'])
+    selected_page = st.sidebar.selectbox('Select Page', ['Home Page', 'Overview', 'Data Visualization', 'Monthly Rent Price Estimator'])
     
     ## sidebar: Home Page ##
     if selected_page == 'Home Page':
