@@ -171,7 +171,7 @@ def main():
         if st.checkbox('Do you want to see the prediction interval?', help = 'Please uncheck this if you want to see the plots of SHAP values clearly'):
             st.write(pred_interval.describe())
             fig, ax = plt.subplots(figsize = (12, 6), nrows = 1, ncols = 2)
-            sns.scatterplot(pred_interval['Actual Price'], pred_interval['Quantile 0.05'], marker = 'x', label = 'lower bound', ax = ax[0], alpha = 0.5)
+            sns.scatterplot(x = pred_interval['Actual Price'], y = pred_interval['Quantile 0.05'], marker = 'x', label = 'lower bound', ax = ax[0], alpha = 0.5)
             sns.scatterplot(pred_interval['Actual Price'], pred_interval['Predicted Price'], label = 'pred', ax = ax[0])
             sns.scatterplot(pred_interval['Actual Price'], pred_interval['Quantile 0.95'], marker = 'x', label = 'upper bound', ax = ax[0], alpha = 0.5)
             sns.lineplot(sorted(pred_interval['Actual Price']), sorted(pred_interval['Quantile 0.05']), ax = ax[0])
