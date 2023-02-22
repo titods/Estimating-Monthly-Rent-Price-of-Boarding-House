@@ -10,7 +10,6 @@ import folium
 import branca.colormap as cm
 from streamlit_folium import folium_static
 import pickle
-from PIL import Image
 import shap
 
 from sklearn.preprocessing import FunctionTransformer, MinMaxScaler, OneHotEncoder, OrdinalEncoder
@@ -228,7 +227,7 @@ def main():
         st.markdown('''We should scrap more data from other online platforms of boarding house. Our dataset is extracted from a single online platform which this could make our data quite skewed if the price in [infokost.id](https://infokost.id/) website is not representative in general for all boarding house units in each of their region. Also adding more data points usually decrease the variance error of the model hence it can reduce the overfitting issue which is the case in this project.''')
         
         
-        ## siderbar: Data Visualization ##
+    ## siderbar: Data Visualization ##
     elif selected_page == 'Data Visualization': 
         st.title('Boarding House Data Visualization')
         
