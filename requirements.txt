@@ -8,5 +8,3 @@ sklearn
 lightgbm
 streamlit_folium
 shap
-pickle
-PIL
