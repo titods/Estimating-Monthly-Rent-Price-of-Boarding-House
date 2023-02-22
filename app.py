@@ -16,12 +16,6 @@ import shap
 from sklearn.preprocessing import FunctionTransformer, MinMaxScaler, OneHotEncoder, OrdinalEncoder
 from sklearn.pipeline import Pipeline, FeatureUnion
 
-def check_room_type(path):
-    if path:
-        return 'yes'
-    else:
-        return 'no'
-
 # function to get the preprocessing pipeline
 def get_feature_pipeline(numerical, nominal, ordinal, binary, algorithm, ordinal_category):
     # get every features as their data types
@@ -29,7 +23,6 @@ def get_feature_pipeline(numerical, nominal, ordinal, binary, algorithm, ordinal
     get_nominal = FunctionTransformer(lambda x: x[nominal], validate = False)
     get_ordinal = FunctionTransformer(lambda x: x[ordinal], validate = False)
     get_binary = FunctionTransformer(lambda x: x[binary], validate = False)
-    
     # preprocessing pipeline for tree-based algorithm
     if algorithm == 'tree-based':
         pipeline_numerical = Pipeline([('numerical', get_numerical)])
@@ -42,8 +35,7 @@ def get_feature_pipeline(numerical, nominal, ordinal, binary, algorithm, ordinal
                                          ('pipeline_nominal', pipeline_nominal),
                                          ('pipeline_ordinal', pipeline_ordinal),
                                          ('pipeline_binary',pipeline_binary)])
-        return feature_pipeline
-    
+        return feature_pipeline 
     # preprocessing pipeline for other than tree-based algorithm 
     elif algorithm == 'non-tree-based':
         pipeline_numerical = Pipeline([('numerical', get_numerical),
@@ -62,22 +54,14 @@ def get_feature_pipeline(numerical, nominal, ordinal, binary, algorithm, ordinal
     else:
         print('error in algorithm input argument. try "tree-based" or "non-tree-based"')
 
-def load_image(name):
-    return Image.open(r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\image\{}'.format(name))
-
-def load_data(name):
-    return r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\dataset\{}'.format(name)
-
-def load_model(name):
-    return r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\model\{}'.format(name)
-
+# main code
 def main():
     #### load and prepare everything ####
     # load the dataset
-    df_EDA = pd.read_csv(load_data('Kost Data (For EDA).csv'))
-    df_model = pd.read_csv(load_data('Kost Data (For Modelling).csv'))
-    df_summary_model_eval = pd.read_csv(load_data('summary_model_eval.csv'), index_col = [0, 1]).loc[['stacking_meta_LinReg', 'LGBM_no_outliers_tuned']].rename(index = {'stacking_meta_LinReg':'Stacking Regressor', 'LGBM_no_outliers_tuned':'Tuned LightGBM'})
-    pred_interval = pd.read_csv(load_data('summary_pred_int.csv'))
+    df_EDA = pd.read_csv('dataset/Kost Data (For EDA).csv')
+    df_model = pd.read_csv('dataset/Kost Data (For Modelling).csv')
+    df_summary_model_eval = pd.read_csv('dataset/summary_model_eval.csv', index_col = [0, 1]).loc[['stacking_meta_LinReg', 'LGBM_no_outliers_tuned']].rename(index = {'stacking_meta_LinReg':'Stacking Regressor', 'LGBM_no_outliers_tuned':'Tuned LightGBM'})
+    pred_interval = pd.read_csv('dataset/summary_pred_int.csv')
     
     # create dictionaries for mapping user input with the feature in the DataFrame
     room_facilities = { 'Water Heater':'fasilitas_kamar_pemanas air',
@@ -141,11 +125,11 @@ def main():
     new_mapper.update(others)
     
     # load the models
-    LGBM_final = pickle.load(open(load_model('LGBM_final.sav'), 'rb'))
-    LGBM_001 = pickle.load(open(load_model('LGBM_001.sav'), 'rb'))
-    LGBM_099 = pickle.load(open(load_model('LGBM_099.sav'), 'rb'))
-    LGBM_095 = pickle.load(open(load_model('LGBM_095.sav'), 'rb'))
-    LGBM_005 = pickle.load(open(load_model('LGBM_005.sav'), 'rb'))
+    LGBM_final = pickle.load(open('model/LGBM_final.sav', 'rb'))
+    LGBM_001 = pickle.load(open('model/LGBM_001.sav', 'rb'))
+    LGBM_099 = pickle.load(open('model/LGBM_099.sav', 'rb'))
+    LGBM_095 = pickle.load(open('model/LGBM_095.sav', 'rb'))
+    LGBM_005 = pickle.load(open('model/LGBM_005.sav', 'rb'))
     
     #### Navigation ####
     st.sidebar.title('Navigation')
@@ -155,7 +139,7 @@ def main():
     if selected_page == 'Home Page':
         st.title('Estimating Monthly Rent Price of Boarding House Project')
         st.write('Open the navigation sidebar on the left to select the pages')
-        st.image(load_image('Boarding House.jpg'))
+        st.image('image/Boarding House.jpg')
         st.caption('Author: Tito Dwi Syahputra')
     
     ## siderbar: Overview ##    
