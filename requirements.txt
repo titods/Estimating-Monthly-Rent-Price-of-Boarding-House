@@ -4,7 +4,7 @@ matplotlib
 seaborn
 folium
 streamlit
-sklearn
+scikit-learn
 lightgbm
 streamlit_folium
 shap
