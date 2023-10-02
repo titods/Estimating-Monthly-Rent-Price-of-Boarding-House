@@ -612,8 +612,8 @@ def main():
         
         for col in [col for col in binary_cols if col not in ['jakarta_check', 'jenis_kost_campur']]:
             df_input[col] = df_input[col].astype('int64')
-        # pl_features.fit(df_EDA)
-        # df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
+        pl_features.fit(df_EDA)
+        df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
         
         # Show inputted user data
         st.subheader('Do you wanna see your input data?')
