@@ -610,15 +610,15 @@ def main():
                                            ordinal_category = [['0 bed', '1 bed', '2 bed'],
                                                                ['single bed', 'long bed', 'double bed', '≥queen bed']])
         
-        # for col in binary_cols:
-        #     df_input[col] = df_input[col].replace({False:0, True:1})
-        # pl_features.fit(df_EDA)
-        # df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
+        for col in [col for col in binary_cols if col not in ['jakarta_check', 'jenis_kost_campur']:
+            df_input[col] = df_input[col].replace({bool(False):0, bool(True):1})
+        pl_features.fit(df_EDA)
+        df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
         
         # Show inputted user data
         st.subheader('Do you wanna see your input data?')
         if st.checkbox('Yes', False):
-            st.write(df_input[binary_cols].rename(new_mapper, axis = 1).dtypes)
+            st.write(df_input[binary_cols].rename(new_mapper, axis = 1))
             st.write(df_input[binary_cols].shape)
         
         # Estimate the price
