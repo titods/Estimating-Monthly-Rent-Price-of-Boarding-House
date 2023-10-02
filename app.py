@@ -610,7 +610,7 @@ def main():
                                            ordinal_category = [['0 bed', '1 bed', '2 bed'],
                                                                ['single bed', 'long bed', 'double bed', '≥queen bed']])
         
-        for col in [col for col in binary_cols if col not in ['jakarta_check', 'jenis_kost_campur']:
+        for col in [col for col in binary_cols if col not in ['jakarta_check', 'jenis_kost_campur']]:
             df_input[col] = df_input[col].replace({bool(False):0, bool(True):1})
         pl_features.fit(df_EDA)
         df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
