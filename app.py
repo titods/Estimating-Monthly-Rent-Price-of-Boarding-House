@@ -605,10 +605,7 @@ def main():
                                            algorithm = 'tree-based', 
                                            ordinal_category = [['0 bed', '1 bed', '2 bed'],
                                                                ['single bed', 'long bed', 'double bed', '≥queen bed']])
-        for col in df_input.select_dtypes('boolean').columns:
-            df_input[col] = df_input[col].map({False:0, True:1})
-        pl_features.fit(df_EDA)
-        df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
+        
         
         # Show inputted user data
         st.subheader('Do you want to see your data as DataFrame?')
