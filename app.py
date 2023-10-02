@@ -10,6 +10,7 @@ import folium
 import branca.colormap as cm
 from streamlit_folium import folium_static
 import pickle
+from PIL import Image
 import shap
 
 from sklearn.preprocessing import FunctionTransformer, MinMaxScaler, OneHotEncoder, OrdinalEncoder
@@ -22,6 +23,7 @@ def get_feature_pipeline(numerical, nominal, ordinal, binary, algorithm, ordinal
     get_nominal = FunctionTransformer(lambda x: x[nominal], validate = False)
     get_ordinal = FunctionTransformer(lambda x: x[ordinal], validate = False)
     get_binary = FunctionTransformer(lambda x: x[binary], validate = False)
+    
     # preprocessing pipeline for tree-based algorithm
     if algorithm == 'tree-based':
         pipeline_numerical = Pipeline([('numerical', get_numerical)])
@@ -34,7 +36,8 @@ def get_feature_pipeline(numerical, nominal, ordinal, binary, algorithm, ordinal
                                          ('pipeline_nominal', pipeline_nominal),
                                          ('pipeline_ordinal', pipeline_ordinal),
                                          ('pipeline_binary',pipeline_binary)])
-        return feature_pipeline 
+        return feature_pipeline
+    
     # preprocessing pipeline for other than tree-based algorithm 
     elif algorithm == 'non-tree-based':
         pipeline_numerical = Pipeline([('numerical', get_numerical),
@@ -53,14 +56,22 @@ def get_feature_pipeline(numerical, nominal, ordinal, binary, algorithm, ordinal
     else:
         print('error in algorithm input argument. try "tree-based" or "non-tree-based"')
 
-# main code
+def load_image(name):
+    return Image.open(r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\image\{}'.format(name))
+
+def load_data(name):
+    return r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\dataset\{}'.format(name)
+
+def load_model(name):
+    return r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\model\{}'.format(name)
+
 def main():
     #### load and prepare everything ####
     # load the dataset
-    df_EDA = pd.read_csv('dataset/Kost Data (For EDA).csv')
-    df_model = pd.read_csv('dataset/Kost Data (For Modelling).csv')
-    df_summary_model_eval = pd.read_csv('dataset/summary_model_eval.csv', index_col = [0, 1]).loc[['stacking_meta_LinReg', 'LGBM_no_outliers_tuned']].rename(index = {'stacking_meta_LinReg':'Stacking Regressor', 'LGBM_no_outliers_tuned':'Tuned LightGBM'})
-    pred_interval = pd.read_csv('dataset/summary_pred_int.csv')
+    df_EDA = pd.read_csv(load_data('Kost Data (For EDA).csv'))
+    df_model = pd.read_csv(load_data('Kost Data (For Modelling).csv'))
+    df_summary_model_eval = pd.read_csv(load_data('summary_model_eval.csv'), index_col = [0, 1]).loc[['stacking_meta_LinReg', 'LGBM_no_outliers_tuned']].rename(index = {'stacking_meta_LinReg':'Stacking Regressor', 'LGBM_no_outliers_tuned':'Tuned LightGBM'})
+    pred_interval = pd.read_csv(load_data('summary_pred_int.csv'))
     
     # create dictionaries for mapping user input with the feature in the DataFrame
     room_facilities = { 'Water Heater':'fasilitas_kamar_pemanas air',
@@ -124,11 +135,11 @@ def main():
     new_mapper.update(others)
     
     # load the models
-    LGBM_final = pickle.load(open('model/LGBM_final.sav', 'rb'))
-    LGBM_001 = pickle.load(open('model/LGBM_001.sav', 'rb'))
-    LGBM_099 = pickle.load(open('model/LGBM_099.sav', 'rb'))
-    LGBM_095 = pickle.load(open('model/LGBM_095.sav', 'rb'))
-    LGBM_005 = pickle.load(open('model/LGBM_005.sav', 'rb'))
+    LGBM_final = pickle.load(open(load_model('LGBM_final.sav'), 'rb'))
+    LGBM_001 = pickle.load(open(load_model('LGBM_001.sav'), 'rb'))
+    LGBM_099 = pickle.load(open(load_model('LGBM_099.sav'), 'rb'))
+    LGBM_095 = pickle.load(open(load_model('LGBM_095.sav'), 'rb'))
+    LGBM_005 = pickle.load(open(load_model('LGBM_005.sav'), 'rb'))
     
     #### Navigation ####
     st.sidebar.title('Navigation')
@@ -138,7 +149,7 @@ def main():
     if selected_page == 'Home Page':
         st.title('Estimating Monthly Rent Price of Boarding House Project')
         st.write('Open the navigation sidebar on the left to select the pages')
-        st.image('image/Boarding House.jpg')
+        st.image(load_image('Boarding House.jpg'))
         st.caption('Author: Tito Dwi Syahputra')
     
     ## siderbar: Overview ##    
@@ -170,21 +181,21 @@ def main():
         if st.checkbox('Do you want to see the prediction interval?', help = 'Please uncheck this if you want to see the plots of SHAP values clearly'):
             st.write(pred_interval.describe())
             fig, ax = plt.subplots(figsize = (12, 6), nrows = 1, ncols = 2)
-            sns.scatterplot(x = pred_interval['Actual Price'], y = pred_interval['Quantile 0.05'], marker = 'x', label = 'lower bound', ax = ax[0], alpha = 0.5)
-            sns.scatterplot(x = pred_interval['Actual Price'], y = pred_interval['Predicted Price'], label = 'pred', ax = ax[0])
-            sns.scatterplot(x = pred_interval['Actual Price'], y = pred_interval['Quantile 0.95'], marker = 'x', label = 'upper bound', ax = ax[0], alpha = 0.5)
-            sns.lineplot(x = sorted(pred_interval['Actual Price']), y = sorted(pred_interval['Quantile 0.05']), ax = ax[0])
-            sns.lineplot(x = sorted(pred_interval['Actual Price']), y = sorted(pred_interval['Predicted Price']), ax = ax[0])
-            sns.lineplot(x = sorted(pred_interval['Actual Price']), y = sorted(pred_interval['Quantile 0.95']), ax = ax[0])
+            sns.scatterplot(pred_interval['Actual Price'], pred_interval['Quantile 0.05'], marker = 'x', label = 'lower bound', ax = ax[0], alpha = 0.5)
+            sns.scatterplot(pred_interval['Actual Price'], pred_interval['Predicted Price'], label = 'pred', ax = ax[0])
+            sns.scatterplot(pred_interval['Actual Price'], pred_interval['Quantile 0.95'], marker = 'x', label = 'upper bound', ax = ax[0], alpha = 0.5)
+            sns.lineplot(sorted(pred_interval['Actual Price']), sorted(pred_interval['Quantile 0.05']), ax = ax[0])
+            sns.lineplot(sorted(pred_interval['Actual Price']), sorted(pred_interval['Predicted Price']), ax = ax[0])
+            sns.lineplot(sorted(pred_interval['Actual Price']), sorted(pred_interval['Quantile 0.95']), ax = ax[0])
             ax[0].set_xlabel('Actual Price (IDR)')
             ax[0].set_ylabel('Predicted Price (IDR)')
             ax[0].set_title('95 % Prediction Interval')
-            sns.scatterplot(x = pred_interval['Actual Price'], y = pred_interval['Quantile 0.01'], marker = 'x', label = 'lower bound', ax = ax[1], alpha = 0.5)
-            sns.scatterplot(x = pred_interval['Actual Price'], y = pred_interval['Predicted Price'], label = 'pred', ax = ax[1])
-            sns.scatterplot(x = pred_interval['Actual Price'], y = pred_interval['Quantile 0.99'], marker = 'x', label = 'upper bound', ax = ax[1], alpha = 0.5)
-            sns.lineplot(x = sorted(pred_interval['Actual Price']), y = sorted(pred_interval['Quantile 0.01']), ax = ax[1])
-            sns.lineplot(x = sorted(pred_interval['Actual Price']), y = sorted(pred_interval['Predicted Price']), ax = ax[1])
-            sns.lineplot(x = sorted(pred_interval['Actual Price']), y = sorted(pred_interval['Quantile 0.99']), ax = ax[1])
+            sns.scatterplot(pred_interval['Actual Price'], pred_interval['Quantile 0.01'], marker = 'x', label = 'lower bound', ax = ax[1], alpha = 0.5)
+            sns.scatterplot(pred_interval['Actual Price'], pred_interval['Predicted Price'], label = 'pred', ax = ax[1])
+            sns.scatterplot(pred_interval['Actual Price'], pred_interval['Quantile 0.99'], marker = 'x', label = 'upper bound', ax = ax[1], alpha = 0.5)
+            sns.lineplot(sorted(pred_interval['Actual Price']), sorted(pred_interval['Quantile 0.01']), ax = ax[1])
+            sns.lineplot(sorted(pred_interval['Actual Price']), sorted(pred_interval['Predicted Price']), ax = ax[1])
+            sns.lineplot(sorted(pred_interval['Actual Price']), sorted(pred_interval['Quantile 0.99']), ax = ax[1])
             ax[1].set_xlabel('Actual Price (IDR)')
             ax[1].set_ylabel('Predicted Price (IDR)')
             ax[1].set_title('99 % Prediction Interval')
@@ -227,7 +238,7 @@ def main():
         st.markdown('''We should scrap more data from other online platforms of boarding house. Our dataset is extracted from a single online platform which this could make our data quite skewed if the price in [infokost.id](https://infokost.id/) website is not representative in general for all boarding house units in each of their region. Also adding more data points usually decrease the variance error of the model hence it can reduce the overfitting issue which is the case in this project.''')
         
         
-    ## siderbar: Data Visualization ##
+        ## siderbar: Data Visualization ##
     elif selected_page == 'Data Visualization': 
         st.title('Boarding House Data Visualization')
         
@@ -598,21 +609,20 @@ def main():
         df_input['total_fasilitas_gedung'] = df_input[building_fac_cols].sum(axis = 1)
         df_input['total_fasilitas_kamar'] = df_input[room_fac_cols].sum(axis = 1)
         df_input['total_fasilitas'] = df_input['total_fasilitas_kamar'] + df_input['total_fasilitas_gedung']
-        binary_cols = ['area makan', 'area parkir', 'cctv', 'cleaning service', 'dapur', 'laundry', 'mesin cuci', 'microwave', 'ruang santai / ruang tamu', 'tempat jemur pakaian', 'wifi', 'sekitar_gedung_mall', 'sekitar_gedung_supermarket', 'sekitar_gedung_akses kesehatan', 'sekitar_gedung_sekolah', 'sekitar_gedung_akses transportasi', 'fasilitas_kamar_pemanas air', 'fasilitas_kamar_shower', 'fasilitas_kamar_wastafel', 'fasilitas_kamar_ac', 'fasilitas_kamar_kursi', 'fasilitas_kamar_lemari', 'fasilitas_kamar_meja', 'fasilitas_kamar_sprei', 'fasilitas_kamar_tv', 'fasilitas_kamar_tv kabel', 'kompor', 'kulkas', 'dispenser', 'fasilitas_kamar_jendela kearah luar', 'jenis_kost_campur', 'fasilitas_kamar_termasuk listrik', 'fasilitas_kamar_kamar mandi dalam', 'jakarta_check']
         pl_features = get_feature_pipeline(numerical = ['luas_kost', 'total_fasilitas_kamar', 'total_fasilitas_gedung', 'total_fasilitas'], 
                                            nominal = ['kota'], 
                                            ordinal = ['fasilitas_kamar_jumlah kasur', 'fasilitas_kamar_tipe kasur'], 
-                                           binary = binary_cols
+                                           binary = ['area makan', 'area parkir', 'cctv', 'cleaning service', 'dapur', 'laundry', 'mesin cuci', 'microwave', 'ruang santai / ruang tamu', 'tempat jemur pakaian', 'wifi', 'sekitar_gedung_mall', 'sekitar_gedung_supermarket', 'sekitar_gedung_akses kesehatan', 'sekitar_gedung_sekolah', 'sekitar_gedung_akses transportasi', 'fasilitas_kamar_pemanas air', 'fasilitas_kamar_shower', 'fasilitas_kamar_wastafel', 'fasilitas_kamar_ac', 'fasilitas_kamar_kursi', 'fasilitas_kamar_lemari', 'fasilitas_kamar_meja', 'fasilitas_kamar_sprei', 'fasilitas_kamar_tv', 'fasilitas_kamar_tv kabel', 'kompor', 'kulkas', 'dispenser', 'fasilitas_kamar_jendela kearah luar', 'jenis_kost_campur', 'fasilitas_kamar_termasuk listrik', 'fasilitas_kamar_kamar mandi dalam', 'jakarta_check'], 
                                            algorithm = 'tree-based', 
                                            ordinal_category = [['0 bed', '1 bed', '2 bed'],
                                                                ['single bed', 'long bed', 'double bed', '≥queen bed']])
-        for col in binary_cols:
+        for col in df_input.select_dtypes('boolean').columns:
             df_input[col] = df_input[col].map({False:0, True:1})
         pl_features.fit(df_EDA)
         df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
         
         # Show inputted user data
-        st.subheader('Do you want to see your data as DataFrame?')
+        st.subheader('TEST?')
         if st.checkbox('Yes', False):
             st.write(df_input.rename(new_mapper, axis = 1))
             st.write(df_input.shape)
