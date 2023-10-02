@@ -126,11 +126,11 @@ def main():
     new_mapper.update(others)
     
     # load the models
-    LGBM_final = pickle.load(open(load_model('LGBM_final.sav'), 'rb'))
-    LGBM_001 = pickle.load(open(load_model('LGBM_001.sav'), 'rb'))
-    LGBM_099 = pickle.load(open(load_model('LGBM_099.sav'), 'rb'))
-    LGBM_095 = pickle.load(open(load_model('LGBM_095.sav'), 'rb'))
-    LGBM_005 = pickle.load(open(load_model('LGBM_005.sav'), 'rb'))
+    LGBM_final = pickle.load(open('model/LGBM_final.sav', 'rb'))
+    LGBM_001 = pickle.load(open('model/LGBM_001.sav', 'rb'))
+    LGBM_099 = pickle.load(open('model/LGBM_099.sav', 'rb'))
+    LGBM_095 = pickle.load(open('model/LGBM_095.sav', 'rb'))
+    LGBM_005 = pickle.load(open('model/LGBM_005.sav', 'rb'))
     
     #### Navigation ####
     st.sidebar.title('Navigation')
