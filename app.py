@@ -618,7 +618,7 @@ def main():
         # Show inputted user data
         st.subheader('Do you wanna see your input data?')
         if st.checkbox('Yes', False):
-            st.write(df_input[binary_cols].rename(new_mapper, axis = 1))
+            st.write(df_input[binary_cols].rename(new_mapper, axis = 1).dtypes)
             st.write(df_input[binary_cols].shape)
         
         # Estimate the price
