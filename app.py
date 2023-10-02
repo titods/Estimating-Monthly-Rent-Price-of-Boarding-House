@@ -603,12 +603,13 @@ def main():
         pl_features = get_feature_pipeline(numerical = ['luas_kost', 'total_fasilitas_kamar', 'total_fasilitas_gedung', 'total_fasilitas'], 
                                            nominal = ['kota'], 
                                            ordinal = ['fasilitas_kamar_jumlah kasur', 'fasilitas_kamar_tipe kasur'], 
-                                           binary = ['area makan', 'area parkir', 'cctv', 'cleaning service', 'dapur', 'laundry', 'mesin cuci', 'microwave', 'ruang santai / ruang tamu', 'tempat jemur pakaian', 'wifi', 'sekitar_gedung_mall', 'sekitar_gedung_supermarket', 'sekitar_gedung_akses kesehatan', 'sekitar_gedung_sekolah', 'sekitar_gedung_akses transportasi', 'fasilitas_kamar_pemanas air', 'fasilitas_kamar_shower', 'fasilitas_kamar_wastafel', 'fasilitas_kamar_ac', 'fasilitas_kamar_kursi', 'fasilitas_kamar_lemari', 'fasilitas_kamar_meja', 'fasilitas_kamar_sprei', 'fasilitas_kamar_tv', 'fasilitas_kamar_tv kabel', 'kompor', 'kulkas', 'dispenser', 'fasilitas_kamar_jendela kearah luar', 'jenis_kost_campur', 'fasilitas_kamar_termasuk listrik', 'fasilitas_kamar_kamar mandi dalam', 'jakarta_check'], 
+                                           binary = binary_cols, 
                                            algorithm = 'tree-based', 
                                            ordinal_category = [['0 bed', '1 bed', '2 bed'],
                                                                ['single bed', 'long bed', 'double bed', '≥queen bed']])
-        for col in df_input.select_dtypes('boolean').columns:
-            df_input[col] = df_input[col].map({False:0, True:1})
+        binary_cols = ['area makan', 'area parkir', 'cctv', 'cleaning service', 'dapur', 'laundry', 'mesin cuci', 'microwave', 'ruang santai / ruang tamu', 'tempat jemur pakaian', 'wifi', 'sekitar_gedung_mall', 'sekitar_gedung_supermarket', 'sekitar_gedung_akses kesehatan', 'sekitar_gedung_sekolah', 'sekitar_gedung_akses transportasi', 'fasilitas_kamar_pemanas air', 'fasilitas_kamar_shower', 'fasilitas_kamar_wastafel', 'fasilitas_kamar_ac', 'fasilitas_kamar_kursi', 'fasilitas_kamar_lemari', 'fasilitas_kamar_meja', 'fasilitas_kamar_sprei', 'fasilitas_kamar_tv', 'fasilitas_kamar_tv kabel', 'kompor', 'kulkas', 'dispenser', 'fasilitas_kamar_jendela kearah luar', 'jenis_kost_campur', 'fasilitas_kamar_termasuk listrik', 'fasilitas_kamar_kamar mandi dalam', 'jakarta_check']
+        for col in binary_cols:
+            df_input[col] = df_input[col].replace({False:0, True:1})
         pl_features.fit(df_EDA)
         df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
         
