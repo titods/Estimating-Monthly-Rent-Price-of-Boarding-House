@@ -611,15 +611,16 @@ def main():
                                                                ['single bed', 'long bed', 'double bed', '≥queen bed']])
         
         for col in [col for col in binary_cols if col not in ['jakarta_check', 'jenis_kost_campur']]:
-            df_input[col] = df_input[col].replace({bool(False):0, bool(True):1})
-        pl_features.fit(df_EDA)
-        df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
+            df_input[col] = df_input[col].astype('object')
+            # df_input[col] = df_input[col].replace({bool(False):0, bool(True):1})
+        # pl_features.fit(df_EDA)
+        # df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
         
         # Show inputted user data
         st.subheader('Do you wanna see your input data?')
         if st.checkbox('Yes', False):
             st.write(df_input[binary_cols].rename(new_mapper, axis = 1))
-            st.write(df_input[binary_cols].shape)
+            st.write(df_input[binary_cols].rename(new_mapper, axis = 1).dtypes)
         
         # Estimate the price
         if st.button('Estimate the monthly rent price'):
