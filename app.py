@@ -140,7 +140,7 @@ def main():
     if selected_page == 'Home Page':
         st.title('Estimating Monthly Rent Price of Boarding House Project')
         st.write('Open the navigation sidebar on the left to select the pages')
-        st.image(load_image('Boarding House.jpg'))
+        st.image('image/Boarding House.jpg')
         st.caption('Author: Tito Dwi Syahputra')
     
     ## siderbar: Overview ##    
