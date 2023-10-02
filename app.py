@@ -611,8 +611,8 @@ def main():
                                                                ['single bed', 'long bed', 'double bed', '≥queen bed']])
         
         for col in [col for col in binary_cols if col not in ['jakarta_check', 'jenis_kost_campur']]:
-            df_input[col] = df_input[col].astype('object')
-            df_input[col] = df_input[col].replace({'False':0, 'True':1})
+            df_input[col] = df_input[col].astype('int64')
+            # df_input[col] = df_input[col].replace({'False':0, 'True':1})
         # pl_features.fit(df_EDA)
         # df_input = pd.DataFrame(pl_features.transform(df_input).toarray(), columns = features)
         
