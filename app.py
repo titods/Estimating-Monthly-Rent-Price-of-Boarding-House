@@ -56,22 +56,13 @@ def get_feature_pipeline(numerical, nominal, ordinal, binary, algorithm, ordinal
     else:
         print('error in algorithm input argument. try "tree-based" or "non-tree-based"')
 
-def load_image(name):
-    return Image.open(r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\image\{}'.format(name))
-
-def load_data(name):
-    return r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\dataset\{}'.format(name)
-
-def load_model(name):
-    return r'C:\Users\Tito\Documents\Portofolio Project\Estimating Boarding House Prices\model\{}'.format(name)
-
 def main():
     #### load and prepare everything ####
     # load the dataset
-    df_EDA = pd.read_csv(load_data('Kost Data (For EDA).csv'))
-    df_model = pd.read_csv(load_data('Kost Data (For Modelling).csv'))
-    df_summary_model_eval = pd.read_csv(load_data('summary_model_eval.csv'), index_col = [0, 1]).loc[['stacking_meta_LinReg', 'LGBM_no_outliers_tuned']].rename(index = {'stacking_meta_LinReg':'Stacking Regressor', 'LGBM_no_outliers_tuned':'Tuned LightGBM'})
-    pred_interval = pd.read_csv(load_data('summary_pred_int.csv'))
+    df_EDA = pd.read_csv('dataset/Kost Data (For EDA).csv')
+    df_model = pd.read_csv('dataset/Kost Data (For Modelling).csv')
+    df_summary_model_eval = pd.read_csv('dataset/summary_model_eval.csv', index_col = [0, 1]).loc[['stacking_meta_LinReg', 'LGBM_no_outliers_tuned']].rename(index = {'stacking_meta_LinReg':'Stacking Regressor', 'LGBM_no_outliers_tuned':'Tuned LightGBM'})
+    pred_interval = pd.read_csv('dataset/summary_pred_int.csv')
     
     # create dictionaries for mapping user input with the feature in the DataFrame
     room_facilities = { 'Water Heater':'fasilitas_kamar_pemanas air',
